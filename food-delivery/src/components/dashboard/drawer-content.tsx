@@ -23,10 +23,10 @@ const ITEMS: { label: string; icon: keyof typeof Ionicons.glyphMap; route: Href 
 export function DrawerContent(props: DrawerContentComponentProps) {
   const { colors } = useTheme();
   const router = useRouter();
-  const user = useAuthStore((s) => s.user);
+  const account = useAuthStore((s) => s.account);
   const logout = useAuthStore((s) => s.logout);
 
-  const profile = user ?? currentUser;
+  const profile = account ?? currentUser;
 
   const handleLogout = () => {
     logout();

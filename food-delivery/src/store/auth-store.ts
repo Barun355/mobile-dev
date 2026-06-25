@@ -1,47 +1,81 @@
 /**
  * Auth store (zustand) — basic local auth for the demo.
  *
- * State is persisted to AsyncStorage so a "logged in" user survives reloads.
- * This is a temporary stand-in for a real backend: `login` simply trusts the
- * provided profile. `hasHydrated` lets the router wait for storage to load
- * before deciding where to send the user.
+ * - `account` is the registered user and is the ONLY persisted field. It
+ *   survives app restarts so we know the user already signed up.
+ * - `isAuthenticated` is the live session and is NOT persisted, so every cold
+ *   start sends a registered user back to the sign-in screen.
+ * - `logout` flushes the persisted account entirely.
  */
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
-export type AuthUser = {
+import { currentUser } from "@/constants/data";
+
+export type Account = {
   name: string;
   email: string;
+  password: string;
   avatar: string;
 };
 
+type SignUpInput = { name: string; email: string; password: string };
+type AuthResult = { ok: boolean; error?: string };
+
 type AuthState = {
-  user: AuthUser | null;
+  account: Account | null;
   isAuthenticated: boolean;
   hasHydrated: boolean;
-  login: (user: AuthUser) => void;
+  signUp: (input: SignUpInput) => void;
+  signIn: (email: string, password: string) => AuthResult;
+  socialAuth: (user: { name: string; email: string }) => void;
   logout: () => void;
   setHasHydrated: (value: boolean) => void;
 };
 
 export const useAuthStore = create<AuthState>()(
   persist(
-    (set) => ({
-      user: null,
+    (set, get) => ({
+      account: null,
       isAuthenticated: false,
       hasHydrated: false,
-      login: (user) => set({ user, isAuthenticated: true }),
-      logout: () => set({ user: null, isAuthenticated: false }),
+
+      signUp: ({ name, email, password }) =>
+        set({
+          account: { name, email, password, avatar: currentUser.avatar },
+          isAuthenticated: true,
+        }),
+
+      signIn: (email, password) => {
+        const account = get().account;
+        if (!account) {
+          return { ok: false, error: "No account found. Please sign up first." };
+        }
+        const emailMatches =
+          account.email.trim().toLowerCase() === email.trim().toLowerCase();
+        if (!emailMatches || account.password !== password) {
+          return { ok: false, error: "Incorrect email or password." };
+        }
+        set({ isAuthenticated: true });
+        return { ok: true };
+      },
+
+      socialAuth: ({ name, email }) =>
+        set({
+          account: { name, email, password: "", avatar: currentUser.avatar },
+          isAuthenticated: true,
+        }),
+
+      // Flush the persisted account + session.
+      logout: () => set({ account: null, isAuthenticated: false }),
+
       setHasHydrated: (value) => set({ hasHydrated: value }),
     }),
     {
       name: "tastio-auth",
       storage: createJSONStorage(() => AsyncStorage),
-      partialize: (state) => ({
-        user: state.user,
-        isAuthenticated: state.isAuthenticated,
-      }),
+      partialize: (state) => ({ account: state.account }),
       onRehydrateStorage: () => (state) => state?.setHasHydrated(true),
     },
   ),

@@ -16,7 +16,7 @@ export default function Profile() {
   const { colors, scheme, toggle } = useTheme();
   const router = useRouter();
   const logout = useAuthStore((s) => s.logout);
-  const profile = useAuthStore((s) => s.user) ?? currentUser;
+  const profile = useAuthStore((s) => s.account) ?? currentUser;
   const favoritesCount = useFavoritesStore((s) => s.ids.length);
 
   const handleSignOut = () => {

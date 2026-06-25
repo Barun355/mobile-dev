@@ -41,7 +41,7 @@ export default function RestaurantDetail() {
             style={{ width: "100%", height: 240 }}
           />
           <Pressable
-            onPress={() => router.back()}
+            onPress={() => (router.canGoBack() ? router.back() : router.replace("/home"))}
             hitSlop={8}
             style={{
               position: "absolute",

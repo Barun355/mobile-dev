@@ -8,8 +8,7 @@ import { useRouter } from "expo-router";
 import { useState } from "react";
 import { View } from "react-native";
 
-import { Button } from "@/components/ui";
-import { currentUser } from "@/constants/data";
+import { Button, Text } from "@/components/ui";
 import { Spacing } from "@/constants/theme";
 import { useAuthStore } from "@/store/auth-store";
 import { AuthDivider } from "./auth-divider";
@@ -18,20 +17,29 @@ import { GoogleAuthButton } from "./google-auth-button";
 
 export function SignInForm() {
   const router = useRouter();
-  const login = useAuthStore((s) => s.login);
+  const signIn = useAuthStore((s) => s.signIn);
+  const socialAuth = useAuthStore((s) => s.socialAuth);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
 
   const handleSignIn = () => {
-    // TODO: replace with a real backend call using { email, password }.
-    const name = email.trim().split("@")[0] || "Guest";
-    login({ name, email: email.trim() || currentUser.email, avatar: currentUser.avatar });
+    if (!email.trim() || !password) {
+      setError("Please enter your email and password.");
+      return;
+    }
+    const result = signIn(email, password);
+    if (!result.ok) {
+      setError(result.error ?? "Sign in failed.");
+      return;
+    }
+    setError(null);
     router.replace("/home");
   };
 
   const handleGoogle = () => {
     // TODO: trigger Google OAuth via your chosen provider.
-    login({ name: "Google User", email: "user@gmail.com", avatar: currentUser.avatar });
+    socialAuth({ name: "Google User", email: "user@gmail.com" });
     router.replace("/home");
   };
 
@@ -54,6 +62,11 @@ export function SignInForm() {
         value={password}
         onChangeText={setPassword}
       />
+      {error ? (
+        <Text variant="caption" color="error">
+          {error}
+        </Text>
+      ) : null}
       <Button size="lg" onPress={handleSignIn}>
         Sign In
       </Button>
