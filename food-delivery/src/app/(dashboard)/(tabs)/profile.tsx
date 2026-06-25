@@ -2,6 +2,7 @@ import { Button, Separator, Text } from "@/components/ui";
 import { currentUser } from "@/constants/data";
 import { Radius, Spacing } from "@/constants/theme";
 import { useTheme } from "@/hooks/use-theme";
+import { useAuthStore } from "@/store/auth-store";
 import { useFavoritesStore } from "@/store/favorites-store";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
@@ -14,7 +15,14 @@ const H = Spacing.lg;
 export default function Profile() {
   const { colors, scheme, toggle } = useTheme();
   const router = useRouter();
+  const logout = useAuthStore((s) => s.logout);
+  const profile = useAuthStore((s) => s.user) ?? currentUser;
   const favoritesCount = useFavoritesStore((s) => s.ids.length);
+
+  const handleSignOut = () => {
+    logout();
+    router.replace("/(auth)/sign-in");
+  };
 
   return (
     <SafeAreaView edges={["top"]} style={{ flex: 1, backgroundColor: colors.background }}>
@@ -31,9 +39,9 @@ export default function Profile() {
             style={{ width: 64, height: 64, borderRadius: Radius.full }}
           />
           <View style={{ flex: 1, gap: 2 }}>
-            <Text variant="subheading">{currentUser.name}</Text>
+            <Text variant="subheading">{profile.name}</Text>
             <Text variant="caption" color="muted">
-              {currentUser.email}
+              {profile.email}
             </Text>
           </View>
         </View>
@@ -67,7 +75,7 @@ export default function Profile() {
         <Button
           variant="outline"
           size="lg"
-          onPress={() => router.replace("/(auth)/sign-in")}
+          onPress={handleSignOut}
           textStyle={{ color: colors.error }}
           style={{ borderColor: colors.error }}
         >

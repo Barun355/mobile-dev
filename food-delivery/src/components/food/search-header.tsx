@@ -14,9 +14,13 @@ import { useTheme } from "@/hooks/use-theme";
 export function SearchHeader({
   onPressBell,
   onPressSearch,
+  onPressCart,
+  cartCount = 0,
 }: {
   onPressBell?: () => void;
   onPressSearch?: () => void;
+  onPressCart?: () => void;
+  cartCount?: number;
 }) {
   const { colors } = useTheme();
 
@@ -61,6 +65,30 @@ export function SearchHeader({
           Search
         </Text>
         <Ionicons name="options-outline" size={18} color={colors.textSecondary} />
+      </Pressable>
+
+      <Pressable onPress={onPressCart} style={iconButton}>
+        <Ionicons name="bag-outline" size={20} color={colors.textSecondary} />
+        {cartCount > 0 ? (
+          <View
+            style={{
+              position: "absolute",
+              top: 4,
+              right: 4,
+              minWidth: 16,
+              height: 16,
+              paddingHorizontal: 3,
+              alignItems: "center",
+              justifyContent: "center",
+              borderRadius: Radius.full,
+              backgroundColor: colors.primary,
+            }}
+          >
+            <Text style={{ color: "#FFFFFF", fontSize: 10, fontWeight: "700" }}>
+              {cartCount}
+            </Text>
+          </View>
+        ) : null}
       </Pressable>
 
       <Pressable onPress={onPressBell} style={iconButton}>

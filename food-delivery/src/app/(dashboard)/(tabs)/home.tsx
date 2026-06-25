@@ -9,6 +9,7 @@ import {
 import { categories, currentUser, banners, popularMeals } from "@/constants/data";
 import { Spacing } from "@/constants/theme";
 import { useTheme } from "@/hooks/use-theme";
+import { useCartCount } from "@/store/cart-store";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { ScrollView, useWindowDimensions, View } from "react-native";
@@ -20,6 +21,7 @@ export default function Home() {
   const { colors } = useTheme();
   const router = useRouter();
   const { width } = useWindowDimensions();
+  const cartCount = useCartCount();
   const [bannerIndex, setBannerIndex] = useState(0);
 
   const bannerWidth = width - H * 2;
@@ -31,7 +33,11 @@ export default function Home() {
         contentContainerStyle={{ paddingVertical: Spacing.md, gap: Spacing.xl }}
       >
         <View style={{ paddingHorizontal: H, gap: Spacing.lg }}>
-          <SearchHeader onPressSearch={() => router.push("/search")} />
+          <SearchHeader
+            onPressSearch={() => router.push("/search")}
+            onPressCart={() => router.push("/cart")}
+            cartCount={cartCount}
+          />
           <View style={{ gap: 2 }}>
             <Text variant="caption" color="muted">
               Hello {currentUser.name}

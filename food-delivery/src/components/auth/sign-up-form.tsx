@@ -9,13 +9,16 @@ import { useState } from "react";
 import { View } from "react-native";
 
 import { Button } from "@/components/ui";
+import { currentUser } from "@/constants/data";
 import { Spacing } from "@/constants/theme";
+import { useAuthStore } from "@/store/auth-store";
 import { AuthDivider } from "./auth-divider";
 import { AuthField } from "./auth-field";
 import { GoogleAuthButton } from "./google-auth-button";
 
 export function SignUpForm() {
   const router = useRouter();
+  const login = useAuthStore((s) => s.login);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -24,12 +27,18 @@ export function SignUpForm() {
   const passwordsMatch = confirm.length === 0 || confirm === password;
 
   const handleSignUp = () => {
-    // TODO: create the account with your backend using { name, email, password }.
+    // TODO: replace with a real backend call using { name, email, password }.
+    login({
+      name: name.trim() || email.trim().split("@")[0] || "Guest",
+      email: email.trim() || currentUser.email,
+      avatar: currentUser.avatar,
+    });
     router.replace("/home");
   };
 
   const handleGoogle = () => {
-    // TODO: trigger Google OAuth via your chosen provider, then route.
+    // TODO: trigger Google OAuth via your chosen provider.
+    login({ name: "Google User", email: "user@gmail.com", avatar: currentUser.avatar });
     router.replace("/home");
   };
 
