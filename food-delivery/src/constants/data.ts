@@ -208,7 +208,7 @@ export const banners: Banner[] = [
   {
     id: "b2",
     title: "Free Delivery",
-    subtitle: "On your first 3 orders over 50 ₺.",
+    subtitle: "On your first 3 orders over ₹50.",
     cta: "Claim now",
     image: photo("1513104890138-7c749659a591"),
   },

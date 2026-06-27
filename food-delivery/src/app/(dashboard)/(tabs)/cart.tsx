@@ -108,7 +108,7 @@ function CartRow({ item }: { item: CartItem }) {
           {meal.name}
         </Text>
         <Text color="primary" style={{ fontWeight: "700", fontVariant: ["tabular-nums"] }}>
-          {meal.price * quantity} ₺
+          ₹{meal.price * quantity}
         </Text>
       </View>
 
@@ -174,7 +174,7 @@ function SummaryRow({
         color={emphasize ? "primary" : "default"}
         style={{ fontWeight: "700", fontVariant: ["tabular-nums"] }}
       >
-        {value} ₺
+        ₹{value}
       </Text>
     </View>
   );

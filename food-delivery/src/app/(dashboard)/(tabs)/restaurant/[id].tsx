@@ -65,7 +65,7 @@ export default function RestaurantDetail() {
           <View style={{ flexDirection: "row", alignItems: "center", gap: Spacing.lg }}>
             <Meta icon="star" color={colors.secondary} label={`${restaurant.rating}`} />
             <Meta icon="time-outline" color={colors.primary} label={restaurant.deliveryTime} />
-            <Meta icon="bicycle-outline" color={colors.accent} label={`${restaurant.deliveryFee} ₺`} />
+            <Meta icon="bicycle-outline" color={colors.accent} label={`₹${restaurant.deliveryFee}`} />
           </View>
 
           <Text color="secondary">{restaurant.description}</Text>
