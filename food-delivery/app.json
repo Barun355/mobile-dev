@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "food-delivery",
-    "slug": "food-delivery",
+    "name": "Tastio",
+    "slug": "tastio",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "fooddelivery",
+    "scheme": "tastio",
     "userInterfaceStyle": "automatic",
     "ios": {
       "icon": "./assets/expo.icon"
@@ -17,7 +17,8 @@
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.baruntiwary.tastio"
     },
     "web": {
       "output": "static",
@@ -39,6 +40,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "51b2c545-1e9d-4648-8c8a-4eb310e26581"
+      }
     }
   }
 }
